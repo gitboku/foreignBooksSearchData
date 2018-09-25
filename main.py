@@ -1,3 +1,8 @@
-from random import randint
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
 
-print("hello world in vsCode")
+def main():
+    print("hello 2")
+
+if __name__ == '__main__':
+    main()
