@@ -1,7 +1,7 @@
 from ScrapingBase import ScrapingBase
 
 from bs4 import BeautifulSoup
-import urllib3
+import requests
 
 class Ladder(ScrapingBase):
     # 'http://www.ibcpub.co.jp/ladder/level'
@@ -11,16 +11,16 @@ class Ladder(ScrapingBase):
     # ladderシリーズのレベルは1から5
     levels = range(1, 6)
 
-    # urllib3はurllib2とは全く異なる運用が必要
-    # https://stackoverflow.com/questions/36516183/what-should-i-use-instead-of-urlopen-in-urllib3
-    http = urllib3.PoolManager()
-
     # スクレイピングを行うメソッド
     def scraping(self):
         baseUrl = self.officialPageUrl + 'level1/'
-        response = self.http.request('GET', baseUrl)
-        soup = BeautifulSoup(response.data, "html.parser")
+        response = requests.get(baseUrl)
+        soup = BeautifulSoup(response.text, "html.parser")
 
-        oneImg = soup.find('img')
+        div = soup.find('div', id='cat2')
+        aSet = div.find_all('a')
 
-        print(oneImg.encode('utf8'))
+        for a in aSet:
+            print(a['href'])
+        
+        print(len(aSet))
