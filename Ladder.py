@@ -17,10 +17,9 @@ class Ladder(ScrapingBase):
         response = requests.get(baseUrl)
         soup = BeautifulSoup(response.text, "html.parser")
 
-        div = soup.find('div', id='cat2')
-        aSet = div.find_all('a')
+        imgSet = soup.find_all('img')
 
-        for a in aSet:
-            print(a['href'])
+        for img in imgSet:
+            print(img['src'])
         
-        print(len(aSet))
+        print(len(imgSet))
