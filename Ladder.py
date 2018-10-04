@@ -2,6 +2,7 @@ from ScrapingBase import ScrapingBase
 
 from bs4 import BeautifulSoup
 import requests
+import re
 
 class Ladder(ScrapingBase):
     # 'http://www.ibcpub.co.jp/ladder/level'
@@ -20,6 +21,9 @@ class Ladder(ScrapingBase):
         imgSet = soup.find_all('img')
 
         for img in imgSet:
-            print(img['src'])
+            if ".jpg" in img['src']:
+                print('src = ' + img['src'])
+                # 10進数以外の文字を空文字と入れ替えることにより、数字だけ抜き出す
+                print('isbn = ' + re.sub(r'\D', '', img['src']))
         
         print(len(imgSet))
