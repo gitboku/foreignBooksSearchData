@@ -14,16 +14,28 @@ class Ladder(ScrapingBase):
 
     # スクレイピングを行うメソッド
     def scraping(self):
-        baseUrl = self.officialPageUrl + 'level1/'
-        response = requests.get(baseUrl)
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        imgSet = soup.find_all('img')
-
-        for img in imgSet:
-            if ".jpg" in img['src']:
-                print('src = ' + img['src'])
-                # 10進数以外の文字を空文字と入れ替えることにより、数字だけ抜き出す
-                print('isbn = ' + re.sub(r'\D', '', img['src']))
+        self.getAllIsbn()
         
-        print(len(imgSet))
+    # すべてのisbnを取得するメソッド
+    def getAllIsbn(self):
+        # isbnを入れる用の配列
+        isbnSet = []
+
+        # level1~5までの商品一覧ページを回る
+        for level in self.levels:
+            targetUrl = self.officialPageUrl + 'level' + str(level)
+            response = requests.get(targetUrl)
+            soup = BeautifulSoup(response.text, "html.parser")
+            imgSet = soup.find_all('img')
+
+            for img in imgSet:
+                if '.jpg' in img['src']:
+                    # 10進数以外の文字を空文字と入れ替えることにより、数字だけ抜き出す
+                    isbnCandidate =re.sub(r'\D', '', img['src'])
+                    if re.match(r'978', isbnCandidate):
+                        isbnSet.append(isbnCandidate)
+
+        print('finish to collect isbn')
+        for isbn in isbnSet:
+            print(isbn)
+        print('finish to print isbnSet')
