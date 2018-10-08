@@ -14,7 +14,9 @@ class Ladder(ScrapingBase):
 
     # スクレイピングを行うメソッド
     def scraping(self):
-        isbnSet = self.getAllIsbn()
+        isbnSet = []
+        for level in self.levels:
+            isbnSet.extend(self.getAllIsbn(level))
         
         for isbn in isbnSet:
             print(isbn)
@@ -27,24 +29,20 @@ class Ladder(ScrapingBase):
 
         
     # すべてのisbnを取得するメソッド
-    def getAllIsbn(self):
-        # isbnを入れる用の配列
+    def getAllIsbn(self, level):
         isbnSet = []
+        targetUrl = self.officialPageUrl + 'level' + str(level)
+        soup = self.getSoup(targetUrl)
+        imgSet = soup.find_all('img')
 
-        # level1~5までの商品一覧ページを回る
-        for level in self.levels:
-            targetUrl = self.officialPageUrl + 'level' + str(level)
-            soup = self.getSoup(targetUrl)
-            imgSet = soup.find_all('img')
+        for img in imgSet:
+            if '.jpg' in img['src']:
+                # 10進数以外の文字を空文字と入れ替えることにより、数字だけ抜き出す
+                isbnCandidate =re.sub(r'\D', '', img['src'])
+                if re.match(r'978', isbnCandidate):
+                    isbnSet.append(isbnCandidate)
 
-            for img in imgSet:
-                if '.jpg' in img['src']:
-                    # 10進数以外の文字を空文字と入れ替えることにより、数字だけ抜き出す
-                    isbnCandidate =re.sub(r'\D', '', img['src'])
-                    if re.match(r'978', isbnCandidate):
-                        isbnSet.append(isbnCandidate)
-
-        print('finish to collect isbn')
+        print('finish to collect isbn: level'+str(level))
         return isbnSet
 
     def getSoup(self, targetUrl):
