@@ -48,8 +48,7 @@ class Ladder(ScrapingBase):
 
         for img in imgSet:
             if '.jpg' in img['src']:
-                # 10進数以外の文字を空文字と入れ替えることにより、数字だけ抜き出す
-                isbnCandidate =re.sub(r'\D', '', img['src'])
+                isbnCandidate = self.filterWordToNum(img['src'])
                 if re.match(r'978', isbnCandidate):
                     isbnSet.append(isbnCandidate)
 
@@ -58,3 +57,7 @@ class Ladder(ScrapingBase):
     def getSoup(self, targetUrl):
         response = requests.get(targetUrl)
         return BeautifulSoup(response.text, "html.parser")
+
+    # 10進数以外の文字を空文字と入れ替えることにより、数字だけ抜き出す
+    def filterWordToNum(self, word):
+        return re.sub(r'\D', '', word)
