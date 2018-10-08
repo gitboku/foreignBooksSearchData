@@ -34,8 +34,7 @@ class Ladder(ScrapingBase):
         # level1~5までの商品一覧ページを回る
         for level in self.levels:
             targetUrl = self.officialPageUrl + 'level' + str(level)
-            response = requests.get(targetUrl)
-            soup = BeautifulSoup(response.text, "html.parser")
+            soup = self.getSoup(targetUrl)
             imgSet = soup.find_all('img')
 
             for img in imgSet:
@@ -47,3 +46,7 @@ class Ladder(ScrapingBase):
 
         print('finish to collect isbn')
         return isbnSet
+
+    def getSoup(self, targetUrl):
+        response = requests.get(targetUrl)
+        return BeautifulSoup(response.text, "html.parser")
