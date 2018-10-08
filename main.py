@@ -8,6 +8,11 @@ import constants
 from Ladder import Ladder
 
 if __name__ == '__main__':
-    ladder = Ladder()
+    scrapers = [
+        Ladder(),
+    ]
 
-    ladder.scraping()
+    for scraper in scrapers:
+        scraper.scraping()
+    
+    # CSVファイルに出力

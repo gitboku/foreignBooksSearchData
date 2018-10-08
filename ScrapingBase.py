@@ -1,11 +1,12 @@
 from bs4 import BeautifulSoup
+from abc import *
 import urllib.request
 import urllib3
 import json
 
 import constants
 
-class ScrapingBase:
+class ScrapingBase(metaclass=ABCMeta):
 
     # rakuten URL
     url = "https://app.rakuten.co.jp/services/api/BooksForeignBook/Search/20170404"
@@ -25,6 +26,12 @@ class ScrapingBase:
     # # https://webservice.rakuten.co.jp/api/booksforeignbooksearch/#outputParameter
     # booksDataDict = json.loads(response.read().decode('utf8'))
     # print(booksDataDict.keys())
+
+    # 書籍情報をスクレイピングする
+    # スクレイピング結果は配列で返す
+    @abstractmethod
+    def scraping(self):
+        raise NotImplementedError
 
     # 楽天ブックス総合検索APIから書籍の情報を得る
     def getBookInfoFromRakuten(self):
