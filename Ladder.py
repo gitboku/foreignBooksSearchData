@@ -14,21 +14,32 @@ class Ladder(ScrapingBase):
 
     # スクレイピングを行うメソッド
     def scraping(self):
-        isbnSet = []
-        for level in self.levels:
-            isbnSet.extend(self.getAllIsbn(level))
-        
-        for isbn in isbnSet:
-            print(isbn)
-        print('finish to print isbnSet')
+        productUrlSet = []
+        booksInfoSet = []
 
+        # ラダーシリーズのすべてのレベルの商品ページのURLを取得する
+        for level in self.levels:
+            isbnSet = self.getAllIsbn(level)
+            for isbn in isbnSet:
+                productUrl = self.officialPageUrl + 'level' + str(level) + '/' + str(isbn) + '.html'
+                productUrlSet.append(productUrl)
+            
         # isbnをもとに商品詳細ページから必要な情報を集める
+        for productUrl in productUrlSet:
+            booksInfoSet.append(self.getBookInfoFromOfficial(productUrl))
+        
+        print('finish to scraping')
+
 
         # 楽天ブックス総合検索APIを用いて必要な情報を集める
         # 楽天ブックス書籍検索APIではないので注意
 
-        
-    # すべてのisbnを取得するメソッド
+    # isbnをもとに商品詳細ページから必要な情報を集める
+    # official_url, page, vocabularyを返す
+    def getBookInfoFromOfficial(self, url):
+        print(url)
+
+    # すべてのisbnを数字で取得するメソッド
     def getAllIsbn(self, level):
         isbnSet = []
         targetUrl = self.officialPageUrl + 'level' + str(level)
@@ -42,7 +53,6 @@ class Ladder(ScrapingBase):
                 if re.match(r'978', isbnCandidate):
                     isbnSet.append(isbnCandidate)
 
-        print('finish to collect isbn: level'+str(level))
         return isbnSet
 
     def getSoup(self, targetUrl):
