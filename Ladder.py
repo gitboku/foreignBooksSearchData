@@ -14,8 +14,12 @@ class Ladder(ScrapingBase):
 
     # スクレイピングを行うメソッド
     def scraping(self):
-        self.getAllIsbn()
+        isbnSet = self.getAllIsbn()
         
+        for isbn in isbnSet:
+            print(isbn)
+        print('finish to print isbnSet')
+
         # isbnをもとに商品詳細ページから必要な情報を集める
 
         # 楽天ブックス総合検索APIを用いて必要な情報を集める
@@ -42,6 +46,4 @@ class Ladder(ScrapingBase):
                         isbnSet.append(isbnCandidate)
 
         print('finish to collect isbn')
-        for isbn in isbnSet:
-            print(isbn)
-        print('finish to print isbnSet')
+        return isbnSet
