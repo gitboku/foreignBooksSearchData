@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
+import constants
+
 class Ladder(ScrapingBase):
     # 'http://www.ibcpub.co.jp/ladder/level'
     # までは同じで、直後に'[1-5]（レベル数）/｛13桁のisbn｝.html'が続く。
@@ -14,18 +16,19 @@ class Ladder(ScrapingBase):
 
     # スクレイピングを行うメソッド
     def scraping(self):
-        productUrlSet = []
+        # productUrlSet = []
         booksInfoSet = []
 
         # ラダーシリーズのすべてのレベルの商品ページのURLを取得する
-        for level in self.levels:
-            isbnSet = self.getAllIsbn(level)
-            for isbn in isbnSet:
-                productUrl = self.officialPageUrl + 'level' + str(level) + '/' + str(isbn) + '.html'
-                productUrlSet.append(productUrl)
-            
+        # 毎回取りに行ってたら迷惑なので、一度取得したらconstants.pyに保存する
+        # for level in self.levels:
+        #     isbnSet = self.getAllIsbn(level)
+        #     for isbn in isbnSet:
+        #         productUrl = self.officialPageUrl + 'level' + str(level) + '/' + str(isbn) + '.html'
+        #         productUrlSet.append(productUrl)
+
         # isbnをもとに商品詳細ページから必要な情報を集める
-        for productUrl in productUrlSet:
+        for productUrl in constants.LADDER_SERIES_URLS:
             booksInfoSet.append(self.getBookInfoFromOfficial(productUrl))
         
         print('finish to scraping')
