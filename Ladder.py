@@ -2,6 +2,7 @@ from ScrapingBase import ScrapingBase
 
 from bs4 import BeautifulSoup
 import requests
+from urllib.request import urlopen
 import re
 
 import constants
@@ -30,6 +31,7 @@ class Ladder(ScrapingBase):
         # isbnをもとに商品詳細ページから必要な情報を集める
         for productUrl in constants.LADDER_SERIES_URLS:
             booksInfoSet.append(self.getBookInfoFromOfficial(productUrl))
+            break
         
         print('finish to scraping')
 
@@ -40,7 +42,16 @@ class Ladder(ScrapingBase):
     # isbnをもとに商品詳細ページから必要な情報を集める
     # official_url, page, vocabularyを返す
     def getBookInfoFromOfficial(self, url):
-        print(url)
+        soup = self.getSoup(url)
+        trSet = soup.find_all("tr")
+
+        # 正常に取得できているが、単純なstringではないので中身を取り出す必要がある
+        for tr in trSet:
+            key = tr.th.text
+            val = tr.td.text
+            
+            if key == 'ページ数' or key == '総単語数':
+                print(self.filterWordToNum(val))
 
     # すべてのisbnを数字で取得するメソッド
     def getAllIsbn(self, level):
@@ -58,8 +69,8 @@ class Ladder(ScrapingBase):
         return isbnSet
 
     def getSoup(self, targetUrl):
-        response = requests.get(targetUrl)
-        return BeautifulSoup(response.text, "html.parser")
+        response = urlopen(targetUrl).read().decode("UTF8", 'ignore')
+        return BeautifulSoup(response, "html.parser")
 
     # 10進数以外の文字を空文字と入れ替えることにより、数字だけ抜き出す
     def filterWordToNum(self, word):
