@@ -6,6 +6,7 @@ from urllib.request import urlopen
 import re
 
 import constants
+from Book import Book
 
 class Ladder(ScrapingBase):
     # 'http://www.ibcpub.co.jp/ladder/level'
@@ -39,19 +40,27 @@ class Ladder(ScrapingBase):
         # 楽天ブックス総合検索APIを用いて必要な情報を集める
         # 楽天ブックス書籍検索APIではないので注意
 
-    # isbnをもとに商品詳細ページから必要な情報を集める
-    # official_url, page, vocabularyを返す
+    # 商品詳細ページから必要な情報を集める
+    # official_url, page, vocabulary, isbnを設定したBookを返す
     def getBookInfoFromOfficial(self, url):
         soup = self.getSoup(url)
         trSet = soup.find_all("tr")
+        newBook = Book()
+        newBook.official_url = url
 
         # 正常に取得できているが、単純なstringではないので中身を取り出す必要がある
         for tr in trSet:
             key = tr.th.text
-            val = tr.td.text
+            val = self.filterWordToNum(tr.td.text)
             
-            if key == 'ページ数' or key == '総単語数':
-                print(self.filterWordToNum(val))
+            if key == 'ページ数':
+                newBook.page = val
+            if key == '総単語数':
+                newBook.vocabulary = val
+            if key == 'ISBN':
+                newBook.isbn = val
+
+        return newBook
 
     # すべてのisbnを数字で取得するメソッド
     def getAllIsbn(self, level):
