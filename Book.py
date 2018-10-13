@@ -5,21 +5,23 @@ import datetime
 class Book():
     def __init__(self):
         self._title            =  ''
-        self._title_kana       =  ''
-        self._japanese_title   =  ''
         self._author           =  ''
-        self._author_kana      =  ''
         self._publisher_name   =  ''
         self._isbn             =  0
+        self._jan              =  0
         self._item_caption     =  ''
-        self._seles_date       =  datetime.date.today()
+        self._seles_date       =  ''
         self._item_price       =  0
         self._item_url         =  ''
         self._affiliate_url    =  ''
         self._small_image_url  =  ''
         self._medium_image_url =  ''
         self._large_image_url  =  ''
-        self._availability     =  ''
+        self._chirayomi_url    =  ''
+        self._availability     =  0
+        self._availability     =  0
+        self._postage_flag     =  0
+        self._limited_flag     =  0
         self._review_count     =  0
         self._review_average   =  ''
         self._books_genre_id   =  ''
@@ -38,36 +40,12 @@ class Book():
         self._title = input
 
     @property
-    def title_kana(self):
-        return self._title_kana
-
-    @title_kana.setter
-    def title_kana(self, input):
-        self._title_kana = input
-
-    @property
-    def japanese_title(self):
-        return self._japanese_title
-
-    @japanese_title.setter
-    def japanese_title(self, input):
-        self._japanese_title = input
-
-    @property
     def author(self):
         return self._author
 
     @author.setter
     def author(self, input):
         self._author = input
-
-    @property
-    def author_kana(self):
-        return self._author_kana
-
-    @author_kana.setter
-    def author_kana(self, input):
-        self._author_kana = input
 
     @property
     def publisher_name(self):
@@ -84,6 +62,14 @@ class Book():
     @isbn.setter
     def isbn(self, input):
         self._isbn = input
+
+    @property
+    def jan(self):
+        return self._jan
+
+    @jan.setter
+    def jan(self, input):
+        self._jan = input
 
     @property
     def item_caption(self):
@@ -150,12 +136,36 @@ class Book():
         self._large_image_url = input
 
     @property
+    def chirayomi_url(self):
+        return self._chirayomi_url
+
+    @chirayomi_url.setter
+    def chirayomi_url(self, input):
+        self._chirayomi_url = input
+
+    @property
     def availability(self):
         return self._availability
 
     @availability.setter
     def availability(self, input):
         self._availability = input
+
+    @property
+    def postage_flag(self):
+        return self._postage_flag
+
+    @postage_flag.setter
+    def postage_flag(self, input):
+        self._postage_flag = input
+
+    @property
+    def limited_flag(self):
+        return self._limited_flag
+
+    @limited_flag.setter
+    def limited_flag(self, input):
+        self._limited_flag = input
 
     @property
     def review_count(self):
