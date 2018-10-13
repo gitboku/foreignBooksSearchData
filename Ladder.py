@@ -25,17 +25,26 @@ class Ladder(ScrapingBase):
         #         productUrlSet.append(productUrl)
 
         # isbnをもとに商品詳細ページから必要な情報を集める
-        # for productUrl in constants.LADDER_SERIES_URLS:
-        #     booksInfoSet.append(self.getBookInfoFromOfficial(productUrl))
-        #     break
-        
-        print('finish to scraping')
-
+        for productUrl in constants.LADDER_SERIES_URLS:
+            booksInfoSet.append(self.getBookInfoFromOfficial(productUrl))
+            break
 
         # 楽天ブックス総合検索APIを用いて必要な情報を集める
-        # 楽天ブックス書籍検索APIではないので注意
+        # 楽天ブックス書籍検索APIではラインナップが足りないのか検索できない
         rakuten = RakutenApi()
-        rakuten.getBookInfoWithIsbn(9784794604545)
+
+        for targetBook in booksInfoSet:
+            itemInfoArray = rakuten.getBookInfoWithIsbn(targetBook.isbn)
+
+            for key, value in itemInfoArray.items():
+                key = transToSnake(key)
+                # 同じ名前のプロパティがあるかどうかを検索し、あれば代入
+                if hasattr(targetBook, key):
+                    setattr(targetBook, key, value)
+
+            print(targetBook.title)
+            print(targetBook.page)
+            print(targetBook.author)
 
     # 商品詳細ページから必要な情報を集める
     # official_url, page, vocabulary, isbnを設定したBookを返す
