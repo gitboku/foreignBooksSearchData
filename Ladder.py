@@ -7,6 +7,7 @@ import re
 
 import constants
 from Book import Book
+from RakutenApi import RakutenApi
 
 class Ladder(ScrapingBase):
     # 'http://www.ibcpub.co.jp/ladder/level'
@@ -30,15 +31,17 @@ class Ladder(ScrapingBase):
         #         productUrlSet.append(productUrl)
 
         # isbnをもとに商品詳細ページから必要な情報を集める
-        for productUrl in constants.LADDER_SERIES_URLS:
-            booksInfoSet.append(self.getBookInfoFromOfficial(productUrl))
-            break
+        # for productUrl in constants.LADDER_SERIES_URLS:
+        #     booksInfoSet.append(self.getBookInfoFromOfficial(productUrl))
+        #     break
         
         print('finish to scraping')
 
 
         # 楽天ブックス総合検索APIを用いて必要な情報を集める
         # 楽天ブックス書籍検索APIではないので注意
+        rakuten = RakutenApi()
+        rakuten.getBookInfoWithIsbn(9784794604545)
 
     # 商品詳細ページから必要な情報を集める
     # official_url, page, vocabulary, isbnを設定したBookを返す
