@@ -11,6 +11,11 @@ from RakutenApi import RakutenApi
 
 import constants
 
+# キャメルケースをスネークケースに変換
+def transToSnake(str):
+    # group() 正規表現にマッチした文字列を返す
+    return re.sub("([A-Z])", lambda x:"_" + x.group(1).lower(), str)
+
 def getSoup(targetUrl):
     response = urlopen(targetUrl).read().decode("UTF8", 'ignore')
     return BeautifulSoup(response, "html.parser")
