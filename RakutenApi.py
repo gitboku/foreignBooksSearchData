@@ -14,6 +14,7 @@ class RakutenApi():
         'format': 'json',
         'booksGenreId': '000',
         'applicationId': constants.APPLICATION_ID,
+        'affiliateId': constants.AFFILIATE_ID,
         'isbnjan': 9784794604545
     }
 
