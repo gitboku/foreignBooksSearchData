@@ -1,10 +1,22 @@
 from bs4 import BeautifulSoup
 from abc import *
+from urllib.request import urlopen
+import json
 import urllib.request
 import urllib3
-import json
+import re
+
+from Book import Book
+from RakutenApi import RakutenApi
 
 import constants
+
+def getSoup(targetUrl):
+    response = urlopen(targetUrl).read().decode("UTF8", 'ignore')
+    return BeautifulSoup(response, "html.parser")
+# 10進数以外の文字を空文字と入れ替えることにより、数字だけ抜き出す
+def filterWordToNum(word):
+    return re.sub(r'\D', '', word)
 
 class ScrapingBase(metaclass=ABCMeta):
 

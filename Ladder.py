@@ -1,13 +1,7 @@
-from ScrapingBase import ScrapingBase
+# coding: UTF-8
 
-from bs4 import BeautifulSoup
-import requests
-from urllib.request import urlopen
-import re
-
-import constants
-from Book import Book
-from RakutenApi import RakutenApi
+# pylint: disable=W0614
+from ScrapingBase import *
 
 class Ladder(ScrapingBase):
     # 'http://www.ibcpub.co.jp/ladder/level'
@@ -46,7 +40,7 @@ class Ladder(ScrapingBase):
     # 商品詳細ページから必要な情報を集める
     # official_url, page, vocabulary, isbnを設定したBookを返す
     def getBookInfoFromOfficial(self, url):
-        soup = self.getSoup(url)
+        soup = getSoup(url)
         trSet = soup.find_all("tr")
         newBook = Book()
         newBook.official_url = url
@@ -54,7 +48,7 @@ class Ladder(ScrapingBase):
         # 正常に取得できているが、単純なstringではないので中身を取り出す必要がある
         for tr in trSet:
             key = tr.th.text
-            val = self.filterWordToNum(tr.td.text)
+            val = filterWordToNum(tr.td.text)
             
             if key == 'ページ数':
                 newBook.page = val
@@ -69,21 +63,13 @@ class Ladder(ScrapingBase):
     def getAllIsbn(self, level):
         isbnSet = []
         targetUrl = self.officialPageUrl + 'level' + str(level)
-        soup = self.getSoup(targetUrl)
+        soup = getSoup(targetUrl)
         imgSet = soup.find_all('img')
 
         for img in imgSet:
             if '.jpg' in img['src']:
-                isbnCandidate = self.filterWordToNum(img['src'])
+                isbnCandidate = filterWordToNum(img['src'])
                 if re.match(r'978', isbnCandidate):
                     isbnSet.append(isbnCandidate)
 
         return isbnSet
-
-    def getSoup(self, targetUrl):
-        response = urlopen(targetUrl).read().decode("UTF8", 'ignore')
-        return BeautifulSoup(response, "html.parser")
-
-    # 10進数以外の文字を空文字と入れ替えることにより、数字だけ抜き出す
-    def filterWordToNum(self, word):
-        return re.sub(r'\D', '', word)
