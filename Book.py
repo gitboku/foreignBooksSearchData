@@ -11,17 +11,11 @@ class Book():
         self._jan              =  0
         self._item_caption     =  ''
         self._seles_date       =  ''
-        self._item_price       =  0
         self._item_url         =  ''
         self._affiliate_url    =  ''
         self._small_image_url  =  ''
         self._medium_image_url =  ''
         self._large_image_url  =  ''
-        self._chirayomi_url    =  ''
-        self._availability     =  0
-        self._availability     =  0
-        self._postage_flag     =  0
-        self._limited_flag     =  0
         self._review_count     =  0
         self._review_average   =  ''
         self._books_genre_id   =  ''
@@ -88,14 +82,6 @@ class Book():
         self._seles_date = input
 
     @property
-    def item_price(self):
-        return self._item_price
-
-    @item_price.setter
-    def item_price(self, input):
-        self._item_price = input
-
-    @property
     def item_url(self):
         return self._item_url
 
@@ -134,38 +120,6 @@ class Book():
     @large_image_url.setter
     def large_image_url(self, input):
         self._large_image_url = input
-
-    @property
-    def chirayomi_url(self):
-        return self._chirayomi_url
-
-    @chirayomi_url.setter
-    def chirayomi_url(self, input):
-        self._chirayomi_url = input
-
-    @property
-    def availability(self):
-        return self._availability
-
-    @availability.setter
-    def availability(self, input):
-        self._availability = input
-
-    @property
-    def postage_flag(self):
-        return self._postage_flag
-
-    @postage_flag.setter
-    def postage_flag(self, input):
-        self._postage_flag = input
-
-    @property
-    def limited_flag(self):
-        return self._limited_flag
-
-    @limited_flag.setter
-    def limited_flag(self, input):
-        self._limited_flag = input
 
     @property
     def review_count(self):
