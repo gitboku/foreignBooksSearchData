@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from abc import *
+from time import sleep
 from urllib.request import urlopen
 import json
 import urllib.request
@@ -10,6 +11,20 @@ from Book import Book
 from RakutenApi import RakutenApi
 
 import constants
+
+# JSONかどうかを判定する
+def isJson(line):
+    try:
+        json.loads(line)
+    except json.JSONDecodeError as e:
+        print(sys.exc_info())
+        print(e)
+        return False
+    except Exception as e:
+        print(sys.exec_info())
+        print(e)
+        return False
+    return True
 
 # キャメルケースをスネークケースに変換
 def transToSnake(str):
