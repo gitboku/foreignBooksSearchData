@@ -24,30 +24,30 @@ class Ladder(ScrapingBase):
         #         productUrl = self.officialPageUrl + 'level' + str(level) + '/' + str(isbn) + '.html'
         #         productUrlSet.append(productUrl)
 
-        # isbnをもとに商品詳細ページから必要な情報を集める
-        for productUrl in constants.LADDER_SERIES_URLS:
-            sleep(2)
-            booksInfoSet.append(self.getBookInfoFromOfficial(productUrl))
-            break
-
-        # 楽天ブックス総合検索APIを用いて必要な情報を集める
-        # 楽天ブックス書籍検索APIではラインナップが足りないのか検索できない
         rakuten = RakutenApi()
-        for targetBook in booksInfoSet:
+        for productUrl in constants.LADDER_SERIES_URLS:
             # 1つのapplication_idにつき、1秒に1回以下のリクエストとしてください。
             # https://webservice.faq.rakuten.co.jp/app/answers/detail/a_id/14261
             sleep(2)
             
-            itemInfoArray = rakuten.getBookInfoWithIsbn(targetBook.isbn)
+            # isbnをもとに商品詳細ページから必要な情報を集める
+            book = self.getBookInfoFromOfficial(productUrl)
+            
+            # 楽天ブックス総合検索APIを用いて必要な情報を集める
+            # 楽天ブックス書籍検索APIではラインナップが足りないのか検索できない
+            itemInfoArray = rakuten.getBookInfoWithIsbn(book.isbn)
             for key, value in itemInfoArray.items():
                 key = transToSnake(key)
                 # 同じ名前のプロパティがあるかどうかを検索し、あれば代入
-                if hasattr(targetBook, key):
-                    setattr(targetBook, key, value)
+                if hasattr(book, key):
+                    setattr(book, key, value)
 
-            print(targetBook.title)
-            print(targetBook.page)
-            print(targetBook.affiliate_url)
+            print(book.title)
+            print(book.page)
+            print(book.affiliate_url)
+
+            booksInfoSet.append(book)
+            break
 
     # 商品詳細ページから必要な情報を集める
     # official_url, page, vocabulary, isbnを設定したBookを返す
