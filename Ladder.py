@@ -24,7 +24,7 @@ class Ladder(ScrapingBase):
         #         productUrl = self.officialPageUrl + 'level' + str(level) + '/' + str(isbn) + '.html'
         #         productUrlSet.append(productUrl)
 
-        rakuten = RakutenApi()
+        # rakuten = RakutenApi()
         for productUrl in constants.LADDER_SERIES_URLS:
             # 1つのapplication_idにつき、1秒に1回以下のリクエストとしてください。
             # https://webservice.faq.rakuten.co.jp/app/answers/detail/a_id/14261
@@ -35,16 +35,13 @@ class Ladder(ScrapingBase):
             
             # 楽天ブックス総合検索APIを用いて必要な情報を集める
             # 楽天ブックス書籍検索APIではラインナップが足りないのか検索できない
-            itemInfoArray = rakuten.getBookInfoWithIsbn(book.isbn)
-            for key, value in itemInfoArray.items():
-                key = transToSnake(key)
-                # 同じ名前のプロパティがあるかどうかを検索し、あれば代入
-                if hasattr(book, key):
-                    setattr(book, key, value)
-
-            print(book.title)
-            print(book.page)
-            print(book.affiliate_url)
+            # 楽天からデータを取得するのはRailsがやる
+            # itemInfoArray = rakuten.getBookInfoWithIsbn(book.isbn)
+            # for key, value in itemInfoArray.items():
+            #     key = transToSnake(key)
+            #     # 同じ名前のプロパティがあるかどうかを検索し、あれば代入
+            #     if hasattr(book, key):
+            #         setattr(book, key, value)
 
             booksInfoSet.append(book)
             break
