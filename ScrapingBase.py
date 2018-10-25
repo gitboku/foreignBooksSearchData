@@ -35,8 +35,8 @@ def getSoup(targetUrl):
     try:
         response = urlopen(targetUrl).read().decode("UTF8", 'ignore')
         return BeautifulSoup(response, "html.parser")
-    except HTTPError:
-        print('404エラーで、ページへのアクセスに失敗しました')
+    except urllib.error.URLError as e:
+        print('404エラーで、ページへのアクセスに失敗しました: ' + e.reason)
         return None
     except:
         print('何らかのエラーが発生しました')
