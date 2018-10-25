@@ -32,8 +32,16 @@ def transToSnake(str):
     return re.sub("([A-Z])", lambda x:"_" + x.group(1).lower(), str)
 
 def getSoup(targetUrl):
-    response = urlopen(targetUrl).read().decode("UTF8", 'ignore')
-    return BeautifulSoup(response, "html.parser")
+    try:
+        response = urlopen(targetUrl).read().decode("UTF8", 'ignore')
+        return BeautifulSoup(response, "html.parser")
+    except HTTPError:
+        print('404エラーで、ページへのアクセスに失敗しました')
+        return null
+    except:
+        print('何らかのエラーが発生しました')
+        return null
+    
 # 10進数以外の文字を空文字と入れ替えることにより、数字だけ抜き出す
 def filterWordToNum(word):
     return re.sub(r'\D', '', word)
