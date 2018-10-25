@@ -35,5 +35,8 @@ if __name__ == '__main__':
         row = []
         for header in headerList:
             row.append(getattr(book, header))
-        f.write(','.join(row) + '\n')
+        try:
+            f.write(','.join(row) + '\n')
+        except:
+            print('エラーが発生しました')
     f.close()
