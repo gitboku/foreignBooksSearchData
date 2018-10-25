@@ -13,26 +13,30 @@ class Ladder(ScrapingBase):
 
     # スクレイピングを行うメソッド
     def scraping(self):
-        # productUrlSet = []
+        productUrlSet = []
         booksInfoSet = []
 
         # ラダーシリーズのすべてのレベルの商品ページのURLを取得する
         # 毎回取りに行ってたら迷惑なので、一度取得したらconstants.pyに保存する
-        # for level in self.levels:
-        #     isbnSet = self.getAllIsbn(level)
-        #     for isbn in isbnSet:
-        #         productUrl = self.officialPageUrl + 'level' + str(level) + '/' + str(isbn) + '.html'
-        #         productUrlSet.append(productUrl)
+        for level in self.levels:
+            isbnSet = self.getAllIsbn(level)
+            for isbn in isbnSet:
+                productUrl = self.officialPageUrl + 'level' + str(level) + '/' + str(isbn)
+                print(productUrl)
+                productUrlSet.append(productUrl)
 
         # rakuten = RakutenApi()
-        roopCount = len(constants.LADDER_SERIES_URLS)
-        for productUrl in constants.LADDER_SERIES_URLS:
+        roopCount = len(productUrlSet)
+        for productUrl in productUrlSet:
             # 1つのapplication_idにつき、1秒に1回以下のリクエストとしてください。
             # https://webservice.faq.rakuten.co.jp/app/answers/detail/a_id/14261
             sleep(2)
             
             # isbnをもとに商品詳細ページから必要な情報を集める
             book = self.getBookInfoFromOfficial(productUrl)
+
+            if book is None:
+                continue
             
             # 楽天ブックス総合検索APIを用いて必要な情報を集める
             # 楽天ブックス書籍検索APIではラインナップが足りないのか検索できない
@@ -53,6 +57,10 @@ class Ladder(ScrapingBase):
     # official_url, page, vocabulary, isbnを設定したBookを返す
     def getBookInfoFromOfficial(self, url):
         soup = getSoup(url)
+
+        if soup is None:
+            return None
+
         trSet = soup.find_all("tr")
         newBook = Book()
         newBook.official_url = url
@@ -76,12 +84,11 @@ class Ladder(ScrapingBase):
         isbnSet = []
         targetUrl = self.officialPageUrl + 'level' + str(level)
         soup = getSoup(targetUrl)
-        imgSet = soup.find_all('img')
+        aSet = soup.find_all('a')
 
-        for img in imgSet:
-            if '.jpg' in img['src']:
-                isbnCandidate = filterWordToNum(img['src'])
-                if re.match(r'978', isbnCandidate):
-                    isbnSet.append(isbnCandidate)
+        for a in aSet:
+            link = a.get("href")
+            if link.endswith('html') and link[0].isdigit():
+                isbnSet.append(link)
 
         return isbnSet
