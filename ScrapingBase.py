@@ -37,10 +37,10 @@ def getSoup(targetUrl):
         return BeautifulSoup(response, "html.parser")
     except HTTPError:
         print('404エラーで、ページへのアクセスに失敗しました')
-        return null
+        return None
     except:
         print('何らかのエラーが発生しました')
-        return null
+        return None
     
 # 10進数以外の文字を空文字と入れ替えることにより、数字だけ抜き出す
 def filterWordToNum(word):
