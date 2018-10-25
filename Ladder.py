@@ -25,6 +25,7 @@ class Ladder(ScrapingBase):
         #         productUrlSet.append(productUrl)
 
         # rakuten = RakutenApi()
+        roopCount = len(constants.LADDER_SERIES_URLS)
         for productUrl in constants.LADDER_SERIES_URLS:
             # 1つのapplication_idにつき、1秒に1回以下のリクエストとしてください。
             # https://webservice.faq.rakuten.co.jp/app/answers/detail/a_id/14261
@@ -44,7 +45,9 @@ class Ladder(ScrapingBase):
             #         setattr(book, key, value)
 
             booksInfoSet.append(book)
-            break
+            roopCount -= 1
+            print(roopCount)
+        return booksInfoSet
 
     # 商品詳細ページから必要な情報を集める
     # official_url, page, vocabulary, isbnを設定したBookを返す
