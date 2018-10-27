@@ -27,6 +27,7 @@ if __name__ == '__main__':
         'isbn',
         'vocabulary',
         'page',
+        'official_url',
     ]
 
     # ヘッダー行も使う
@@ -34,7 +35,10 @@ if __name__ == '__main__':
     for book in bookSet:
         row = []
         for header in headerList:
-            row.append(getattr(book, header))
+            if header == 'isbn' or header == 'official_url':
+                row.append("\"" + getattr(book, header) + "\"")
+            else:
+                row.append(getattr(book, header))
         try:
             f.write(','.join(row) + '\n')
         except:
