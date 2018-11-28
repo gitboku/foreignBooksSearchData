@@ -31,9 +31,9 @@ def transToSnake(str):
     # group() 正規表現にマッチした文字列を返す
     return re.sub("([A-Z])", lambda x:"_" + x.group(1).lower(), str)
 
-def getSoup(targetUrl):
+def getSoup(targetUrl, encode="UTF8"):
     try:
-        response = urlopen(targetUrl).read().decode("UTF8", 'ignore')
+        response = urlopen(targetUrl).read().decode(encode, 'ignore')
         return BeautifulSoup(response, "html.parser")
     except urllib.error.URLError as e:
         print('404エラーで、ページへのアクセスに失敗しました: ' + e.reason)
